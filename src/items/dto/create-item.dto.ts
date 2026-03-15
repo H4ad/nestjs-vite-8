@@ -1,16 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsNumber, IsString, Max, Min } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-export class CreateItemDto {
-  @ApiProperty()
-  @IsString()
-  title: string;
+const CreateItemSchema = z.object({
+  title: z.string(),
+  price: z.coerce.number().min(0).max(999999),
+});
 
-  @ApiProperty({ minimum: 0, maximum: 999999 })
-  @Type(() => Number)
-  @IsNumber()
-  @Min(0)
-  @Max(999999)
-  price: number;
-}
+export class CreateItemDto extends createZodDto(CreateItemSchema) {}

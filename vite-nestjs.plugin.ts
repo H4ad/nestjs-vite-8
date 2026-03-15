@@ -1,5 +1,6 @@
-import { INestApplication } from "@nestjs/common";
-import { IncomingMessage, ServerResponse } from "node:http"; import { Connect, Plugin, ViteDevServer } from "vite";
+import { IncomingMessage, ServerResponse } from 'node:http';
+import { INestApplication } from '@nestjs/common';
+import { Connect, Plugin, ViteDevServer } from 'vite';
 
 let prevApp: INestApplication;
 
@@ -21,7 +22,6 @@ export const NestHandler = async ({
   }
 
   const instance = app.getHttpAdapter().getInstance();
-
 
   if (typeof instance === 'function') {
     instance(req, res);
@@ -46,9 +46,10 @@ export const createMiddleware = async (
     process.exit(1);
   }
 
-  server.httpServer!.once('listening', async () => {
-    await _loadApp();
-  });
+  if (server.httpServer)
+    server.httpServer.once('listening', async () => {
+      await _loadApp();
+    });
 
   const debounceDelayMs = 500;
   const debounce = (fn: () => void, delay: number) => {
@@ -76,8 +77,7 @@ export const createMiddleware = async (
   };
 };
 
-export const ViteNestJsPlugin: Plugin =
-{
+export const ViteNestJsPlugin: Plugin = {
   name: 'vite-plugin-nestjs',
   enforce: 'post',
   configureServer: async (server) => {

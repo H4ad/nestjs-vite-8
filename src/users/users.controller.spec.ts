@@ -1,17 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { UsersController } from './users.controller.js';
 import { UsersService } from './users.service.js';
-import { describe, beforeEach, it, expect, vi } from 'vitest';
 
 describe('UsersController', () => {
   let controller: UsersController;
 
   beforeEach(async () => {
     const mockUsersService = {
-      findAll: vi.fn().mockResolvedValue([{ id: '1', name: 'Alice', email: 'alice@example.com' }]),
-      findOne: vi.fn().mockResolvedValue({ id: '1', name: 'Alice', email: 'alice@example.com' }),
-      create: vi.fn().mockResolvedValue({ id: '2', name: 'Test User', email: 'test@example.com' }),
-      update: vi.fn().mockResolvedValue({ id: '1', name: 'Alice Updated', email: 'alice@example.com' }),
+      findAll: vi
+        .fn()
+        .mockResolvedValue([
+          { id: '1', name: 'Alice', email: 'alice@example.com' },
+        ]),
+      findOne: vi.fn().mockResolvedValue({
+        id: '1',
+        name: 'Alice',
+        email: 'alice@example.com',
+      }),
+      create: vi.fn().mockResolvedValue({
+        id: '2',
+        name: 'Test User',
+        email: 'test@example.com',
+      }),
+      update: vi.fn().mockResolvedValue({
+        id: '1',
+        name: 'Alice Updated',
+        email: 'alice@example.com',
+      }),
       remove: vi.fn().mockResolvedValue(undefined),
     };
 

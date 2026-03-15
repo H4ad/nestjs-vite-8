@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { ItemsController } from './items.controller.js';
 import { ItemsService } from './items.service.js';
-import { describe, beforeEach, it, expect, vi } from 'vitest';
 
 const EXISTING_ITEM_ID = '550e8400-e29b-41d4-a716-446655440000';
 
@@ -10,10 +10,24 @@ describe('ItemsController', () => {
 
   beforeEach(async () => {
     const mockItemsService = {
-      findAll: vi.fn().mockResolvedValue([{ id: EXISTING_ITEM_ID, title: 'Widget', price: 999 }]),
-      findOne: vi.fn().mockResolvedValue({ id: EXISTING_ITEM_ID, title: 'Widget', price: 999 }),
-      create: vi.fn().mockResolvedValue({ id: 'uuid', title: 'Test Item', price: 50 }),
-      update: vi.fn().mockResolvedValue({ id: EXISTING_ITEM_ID, title: 'Widget', price: 1234 }),
+      findAll: vi
+        .fn()
+        .mockResolvedValue([
+          { id: EXISTING_ITEM_ID, title: 'Widget', price: 999 },
+        ]),
+      findOne: vi.fn().mockResolvedValue({
+        id: EXISTING_ITEM_ID,
+        title: 'Widget',
+        price: 999,
+      }),
+      create: vi
+        .fn()
+        .mockResolvedValue({ id: 'uuid', title: 'Test Item', price: 50 }),
+      update: vi.fn().mockResolvedValue({
+        id: EXISTING_ITEM_ID,
+        title: 'Widget',
+        price: 1234,
+      }),
       remove: vi.fn().mockResolvedValue(undefined),
     };
 

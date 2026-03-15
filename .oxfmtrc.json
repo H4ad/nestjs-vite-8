@@ -3,6 +3,12 @@
   "singleQuote": true,
   "trailingComma": "all",
   "printWidth": 80,
-  "sortPackageJson": false,
+  "sortPackageJson": true,
+  "bracketSpacing": true,
+  "sortImports": {
+    "order": "asc",
+    "newlinesBetween": false,
+    "sortSideEffects": false
+  },
   "ignorePatterns": ["node_modules"]
 }

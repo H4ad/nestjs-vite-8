@@ -37,8 +37,8 @@ This project uses [Vite 8](https://vite.dev/) as the build tool and dev server, 
 
 ### Key configuration
 
-- **Decorators**: OXC decorator support with `emitDecoratorMetadata` and `legacy: true` for Nest/TypeORM compatibility.
-- **SSR**: `ssr.noExternal` keeps `typeorm` and `pg` bundled in dev/prod; in test mode they remain external so in-memory Postgres (pg-mem) works.
+- **Decorators**: OXC decorator support with `emitDecoratorMetadata` and `legacy: true` for Nest compatibility.
+- **SSR**: `ssr.noExternal` keeps `drizzle-orm` and `pg` bundled in dev/prod; in test mode they remain external so in-memory Postgres (PGLite) works.
 - **CJS runtime fix**: A transform plugin converts `@oxc-project/runtime` CJS exports to ESM for SSR compatibility.
 - **Vitest**: When `VITEST` is set, the NestJS plugin and static copy are disabled. Tests share the base Vite config.
 
@@ -56,7 +56,7 @@ $ pnpm install
 
 ## Database
 
-Uses PostgreSQL with TypeORM. Copy `.env.example` to `.env` and adjust `DATABASE_URL` if needed.
+Uses PostgreSQL with [Drizzle ORM](https://orm.drizzle.team/). Copy `.env.example` to `.env` and adjust `DATABASE_URL` if needed.
 
 ```bash
 # Start Postgres via Docker
@@ -64,9 +64,18 @@ $ pnpm docker:up
 
 # Stop
 $ pnpm docker:down
+
+# Push schema to database
+$ pnpm db:push
+
+# Generate migrations
+$ pnpm db:generate
+
+# Open Drizzle Studio
+$ pnpm db:studio
 ```
 
-Tests use [pg-mem](https://github.com/oguimbal/pg-mem) (in-memory Postgres) automatically when run via Vitest.
+Tests use [PGLite](https://github.com/electric-sql/pglite) (in-memory Postgres) automatically when run via Vitest.
 
 ## Compile and run the project
 

@@ -1,10 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { ItemsService } from './items.service.js';
-import { Item } from './entities/item.entity.js';
-import { createPgMemDataSource } from '../database/pg-mem-testing.js';
+import { Test, TestingModule } from '@nestjs/testing';
 import { describe, beforeEach, it, expect } from 'vitest';
+import { DatabaseModule } from '../database/database.module.js';
+import { ItemsService } from './items.service.js';
 
 const EXISTING_ITEM_ID = '550e8400-e29b-41d4-a716-446655440000';
 
@@ -13,13 +11,7 @@ describe('ItemsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: () => ({ type: 'postgres' as const, entities: [Item] }),
-          dataSourceFactory: createPgMemDataSource,
-        }),
-        TypeOrmModule.forFeature([Item]),
-      ],
+      imports: [DatabaseModule],
       providers: [ItemsService],
     }).compile();
 

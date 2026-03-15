@@ -1,23 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
-import { UsersService } from './users.service.js';
-import { User } from './entities/user.entity.js';
-import { createPgMemDataSource } from '../database/pg-mem-testing.js';
+import { Test, TestingModule } from '@nestjs/testing';
 import { describe, beforeEach, it, expect } from 'vitest';
+import { DatabaseModule } from '../database/database.module.js';
+import { UsersService } from './users.service.js';
 
 describe('UsersService', () => {
   let service: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: () => ({ type: 'postgres' as const, entities: [User] }),
-          dataSourceFactory: createPgMemDataSource,
-        }),
-        TypeOrmModule.forFeature([User]),
-      ],
+      imports: [DatabaseModule],
       providers: [UsersService],
     }).compile();
 
@@ -60,7 +52,11 @@ describe('UsersService', () => {
     });
 
     it('should create a user with optional bio', async () => {
-      const dto = { name: 'Carol', email: 'carol@example.com', bio: 'Designer' };
+      const dto = {
+        name: 'Carol',
+        email: 'carol@example.com',
+        bio: 'Designer',
+      };
       const result = await service.create(dto);
       expect(result.bio).toBe('Designer');
     });
@@ -87,7 +83,9 @@ describe('UsersService', () => {
         email: 'temp@example.com',
       });
       await service.remove(created.id);
-      await expect(service.findOne(created.id)).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(created.id)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw NotFoundException when user does not exist', async () => {
