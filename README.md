@@ -25,27 +25,30 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## NestJS with Vite 8 and Vitest
+## NestJS 12 with Vite 8.2 and Vitest
 
-This project uses [Vite 8](https://vite.dev/) as the build tool and dev server, and [Vitest](https://vitest.dev/) for testing, instead of the default NestJS CLI (Webpack) and Jest setup.
+This project uses [Vite 8.2.2](https://vite.dev/) as the build tool and dev server, and [Vitest](https://vitest.dev/) for testing, instead of the default NestJS CLI (Webpack) and Jest setup. The application is native ESM from source through the production bundle.
+
+Node.js `20.19+` or `22.12+` is required by NestJS 12.
 
 ### Architecture
 
 - **Dev server**: Vite serves the app via a custom plugin (`vite-nestjs.plugin.ts`) that loads the Nest app as an SSR module and forwards HTTP requests to it. On file changes, the app is reloaded with debouncing.
-- **Build**: Vite's SSR mode produces a single CommonJS bundle (`dist/main.js`) using Rolldown. Node builtins are externalized.
+- **Build**: Vite's SSR mode produces one ESM server bundle (`dist/main.js`) using Rolldown. Node builtins stay external, while application dependencies remain bundled to preserve the previous artifact behavior.
 - **Entry point**: `src/main.ts` exports `viteNodeApp` (a promise resolving to the Nest app) for the dev plugin and only boots the server in production.
 
 ### Key configuration
 
 - **Decorators**: OXC decorator support with `emitDecoratorMetadata` and `legacy: true` for Nest compatibility.
-- **SSR**: `ssr.noExternal` keeps `drizzle-orm` and `pg` bundled in dev/prod; in test mode they remain external so in-memory Postgres (PGLite) works.
-- **CJS runtime fix**: A transform plugin converts `@oxc-project/runtime` CJS exports to ESM for SSR compatibility.
+- **SSR**: Production bundles application dependencies. Missing optional Drizzle adapter peers get build-only stubs that throw a clear error if an unavailable adapter is selected.
+- **ESM resolution**: Node's `import.meta.dirname` and `import.meta.resolve` handle production assets and package paths without `createRequire`.
 - **Vitest**: When `VITEST` is set, the NestJS plugin and static copy are disabled. Tests share the base Vite config.
 
 ### Vitest
 
 - Unit tests use `@nestjs/testing` with Vitest's `describe`/`it`/`expect`.
 - E2E tests use `vitest.config.e2e.ts` (merged with base config) and `supertest`.
+- The production bundle ESM check runs with `pnpm run test:build` after a build.
 - Coverage is provided by `@vitest/coverage-v8`.
 
 ## Project setup

@@ -1,16 +1,12 @@
-import { createRequire } from 'node:module';
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
 import * as schema from './schema.js';
-
-const require = createRequire(import.meta.url);
 
 export async function createTestDb() {
   const client = new PGlite();
   const db = drizzle(client, { schema });
 
-  const { pushSchema } =
-    require('drizzle-kit/api') as typeof import('drizzle-kit/api');
+  const { pushSchema } = await import('drizzle-kit/api');
   const { apply } = await pushSchema(schema, db as never);
   await apply();
 

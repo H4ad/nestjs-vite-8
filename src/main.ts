@@ -1,6 +1,5 @@
 import 'dotenv/config';
-import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,9 +8,9 @@ import { AppModule } from './app.module.js';
 
 const getSwaggerUiPath = () =>
   import.meta.env.PROD
-    ? join(dirname(fileURLToPath(import.meta.url)), 'swagger-ui-dist')
-    : dirname(
-        createRequire(import.meta.url).resolve('swagger-ui-dist/package.json'),
+    ? join(import.meta.dirname, 'swagger-ui-dist')
+    : fileURLToPath(
+        new URL('.', import.meta.resolve('swagger-ui-dist/package.json')),
       );
 
 const createApp = async () => {
